@@ -93,10 +93,11 @@ try {
 }
 
 # Encrypt quarantine file
-$LatestQuarantined = Get-ChildItem -Path $QUAR_DIR | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$FileName = [IO.Path]::GetFileName($FilePath)
+$QuarantinedPath = Join-Path $QUAR_DIR $FileName
 
-if ($LatestQuarantined) {
-    $Encrypted = "$($LatestQuarantined.FullName).enc"
+if (Test-Path $QuarantinedPath) {
+    $Encrypted = "$($QuarantinedPath).enc"
     $Password = "SUPER_SECRET_KEY"
 
     # Create salt
@@ -109,7 +110,7 @@ if ($LatestQuarantined) {
     $AES.IV  = $PBKDF2.GetBytes(16)
 
     # Encrypt file
-    $InputBytes = [IO.File]::ReadAllBytes($LatestQuarantined.FullName)
+    $InputBytes = [IO.File]::ReadAllBytes($QuarantinedPath)
     $Encryptor  = $AES.CreateEncryptor()
     $EncryptedBytes = $Encryptor.TransformFinalBlock($InputBytes, 0, $InputBytes.Length)
 
@@ -117,8 +118,8 @@ if ($LatestQuarantined) {
     $Output = $Salt + $EncryptedBytes
     [IO.File]::WriteAllBytes($Encrypted, $Output)
 
-    Write-log "Encrypted file: $LatestQuarantined.FullName"
+    Write-log "Encrypted file: $QuarantinedPath"
 
     # Remove original infected file
-    Remove-Item $LatestQuarantined.FullName -Force
+    Remove-Item $QuarantinedPath -Force
 }
