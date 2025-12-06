@@ -231,3 +231,23 @@ if (-not (Test-Path $quarantineDir)) {
     New-Item -ItemType Directory -Path $quarantineDir -Force | Out-Null
     Write-Host "[SUCCESS] Created quarantine directory: $quarantineDir" -ForegroundColor Green
 }
+
+# Step 7: Copy Unofficial Clamav Signature Directory to Public
+Write-Host "[7/7] Preparing unofficial signature bundle..." -ForegroundColor Cyan
+
+$signatureSource = Join-Path $PSScriptRoot "unofficial_clamav_signature"
+$signatureDest   = "C:\Users\$env:USERNAME\UnofficialClamAVSignature"
+
+if (-not (Test-Path $signatureSource)) {
+    Write-Host "[ERROR] Signature source folder not found: $signatureSource" -ForegroundColor Red
+    exit 1
+}
+
+Copy-Item $signatureSource $signatureDest -Recurse -Force
+Write-Host "[SUCCESS] Copied unofficial signatures to $signatureDest" -ForegroundColor Green
+
+# Apply ACLs (admins only on scripts, users RW on feeds)
+icacls "$signatureDest\update_signature.ps1" /inheritance:r /grant:r "Administrators:F" "SYSTEM:F" | Out-Null
+icacls "$signatureDest\signature_installer.ps1" /inheritance:r /grant:r "Administrators:F" "SYSTEM:F" | Out-Null
+icacls "$signatureDest\feeds.psd1" /inheritance:r /grant:r "Administrators:F" "SYSTEM:F" "Users:RW" | Out-Null
+Write-Host "[SUCCESS] Applied permission requirements" -ForegroundColor Green
