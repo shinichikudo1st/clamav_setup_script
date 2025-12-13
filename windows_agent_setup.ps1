@@ -174,8 +174,7 @@ $directoriesToAdd = @(
     "C:\Users\Public\Downloads",
     "C:\Users\Public\Desktop",
     "C:\Users\*\Downloads",
-    "C:\Temp",
-    "C:\Windows\Temp"
+    "C:\Temp"
 )
 
 Write-Host "[INFO] Adding real-time FIM monitoring directories..." -ForegroundColor Cyan
