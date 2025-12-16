@@ -87,7 +87,8 @@ $SCRIPT_SOURCE_DIR = "$PSScriptRoot\scripts"
 $scriptsToInstall = @(
     @{Source = "scan_new_file.ps1"; Wrapper = $true},
     @{Source = "release_file.ps1"; Wrapper = $true},
-    @{Source = "remove_file.ps1"; Wrapper = $true}
+    @{Source = "remove_file.ps1"; Wrapper = $true},
+    @{Source = "revert_file.ps1"; Wrapper = $true}
 )
 
 foreach ($script in $scriptsToInstall) {
@@ -143,7 +144,8 @@ $localfilesToAdd = @(
     @{Location = "C:\Program Files\ClamAV\clamd.log"; Format = "syslog"},
     @{Location = "C:\Program Files\ClamAV\scan.log"; Format = "syslog"},
     @{Location = "C:\Program Files (x86)\ossec-agent\logs\release.log"; Format = "syslog"},
-    @{Location = "C:\Program Files (x86)\ossec-agent\logs\remove_file.log"; Format = "syslog"}
+    @{Location = "C:\Program Files (x86)\ossec-agent\logs\remove_file.log"; Format = "syslog"},
+    @{Location = "C:\Program Files (x86)\ossec-agent\logs\revert_file.log"; Format = "syslog"}
 )
 
 Write-Host "[INFO] Adding log file monitoring entries..." -ForegroundColor Cyan
@@ -212,6 +214,7 @@ if (-not (Test-Path $arLogsDir)) {
 $logFiles = @(
     "$arLogsDir\release.log",
     "$arLogsDir\remove_file.log",
+    "$arLogsDir\revert_file.log",
     "$CLAMAV_DIR\scan.log",
     "$CLAMAV_DIR\clamd.log",
     "$CLAMAV_DIR\whitelist.txt"
