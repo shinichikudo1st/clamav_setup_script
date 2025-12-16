@@ -75,6 +75,14 @@ if (-not (Test-Path $QUAR_DIR)) {
 $FileName = [IO.Path]::GetFileName($OriginalPath)
 $QuarantinedPath = Join-Path $QUAR_DIR $FileName
 
+if (-not (Test-Path $OriginalPath)) {
+    Write-Log "[ERROR] Restored file not found: $OriginalPath"
+    exit 1
+}
+
+Move-Item -Path $OriginalPath -Destination $QuarantinedPath -Force
+Write-Log "[INFO] File moved back to quarantine: $QuarantinedPath"
+
 if (Test-Path $QuarantinedPath) {
     $Encrypted = "$($QuarantinedPath).enc"
     $Password = "SUPER_SECRET_KEY"

@@ -145,7 +145,7 @@ $localfilesToAdd = @(
     @{Location = "C:\Program Files\ClamAV\scan.log"; Format = "syslog"},
     @{Location = "C:\Program Files (x86)\ossec-agent\logs\release.log"; Format = "syslog"},
     @{Location = "C:\Program Files (x86)\ossec-agent\logs\remove_file.log"; Format = "syslog"},
-    @{Location = "C:\Program Files (x86)\ossec-agent\logs\revert_file.log"; Format = "syslog"}
+    @{Location = "C:\Program Files (x86)\ossec-agent\logs\revert.log"; Format = "syslog"}
 )
 
 Write-Host "[INFO] Adding log file monitoring entries..." -ForegroundColor Cyan
@@ -214,7 +214,7 @@ if (-not (Test-Path $arLogsDir)) {
 $logFiles = @(
     "$arLogsDir\release.log",
     "$arLogsDir\remove_file.log",
-    "$arLogsDir\revert_file.log",
+    "$arLogsDir\revert.log",
     "$CLAMAV_DIR\scan.log",
     "$CLAMAV_DIR\clamd.log",
     "$CLAMAV_DIR\whitelist.txt"
